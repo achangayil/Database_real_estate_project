@@ -1,0 +1,55 @@
+
+
+body {
+    background-image: url('body3.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+}
+
+header {
+    background-image: url('header.jpg');
+    background-size: cover;
+    color: black; /* Text color */
+    text-align: center;
+    padding: 10px 0px; /* Decrease the padding to make it thinner */
+    font-size: 25px; /* Decrease the font size slightly */
+    line-height: .5;
+    position: relative; /* Add position relative to enable animation */
+    top: -100px; /* Initial position above the viewport */
+    animation: slideIn 1s forwards; /* Use the slideIn animation with a duration of 1 second */
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #000000; /* Black color */
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+h2 {
+    color: #555;
+}
+
+.content-wrapper {
+    padding-left: 10px; /* Add padding to move content to the right */
+}
+
+.bottom-box {
+    background-color: #CCCCCC;
+    padding: 20px;
+    text-align: center;
+}
+
+@keyframes slideIn {
+    to {
+        top: 0; /* Slide in to the final position (top 0) */
+    }
+}
+
+*/
