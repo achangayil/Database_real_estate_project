@@ -5,7 +5,6 @@ if (!isset($_SESSION["username"])) {
     exit;
 }
 
-// Database configuration
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -15,9 +14,7 @@ $error = "";
 $successMessage = "";
 
 try {
-    // Create a new PDO connection
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
-    // Set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -25,7 +22,6 @@ try {
         $lname = $_POST["lname"];
         $email = $_POST["email"];
 
-        // Query to update user data
         $updateQuery = "UPDATE signup SET fname = :fname, lname = :lname, email = :email WHERE username = :username";
         $updateStmt = $conn->prepare($updateQuery);
         $updateStmt->bindParam(":fname", $fname);
@@ -40,7 +36,6 @@ try {
         }
     }
 
-    // Query to fetch user data by username
     $query = "SELECT * FROM signup WHERE username = :username and user_role='Seller'";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(":username", $_SESSION["username"]);
@@ -50,7 +45,6 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-// Close the database connection
 $conn = null;
 ?>
 
@@ -61,9 +55,8 @@ $conn = null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Profile</title>
     <style>
-        /* Add CSS for background image and centering */
         body {
-            background-image: url('body3.jpg'); /* Replace with your image path */
+            background-image: url('body3.jpg'); 
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -80,7 +73,7 @@ $conn = null;
 
         .header-title {
             text-align: center;
-            flex-grow: 1; /* Allows the title to take up available space */
+            flex-grow: 1; 
         }
 
         .logout-button {
@@ -89,7 +82,7 @@ $conn = null;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
-            margin-right: 20px; /* Move the Logout button to the right */
+            margin-right: 20px; 
         }
 
         .button-row {
@@ -149,7 +142,7 @@ $conn = null;
 <body>
     <header>
         <h1 class="header-title"><br>Seller Profile</h1>
-        <form method="post" action="realEstateLogin.php"> <!-- Updated action attribute -->
+        <form method="post" action="realEstateLogin.php"> 
             <button type="submit" name="logout" class="logout-button">Logout</button>
         </form>
     </header>

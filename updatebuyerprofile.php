@@ -5,22 +5,18 @@ if (!isset($_SESSION["username"])) {
     exit;
 }
 
-// Database configuration
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
 $dbname = "test";
 
 $error = "";
-$confirmationMessage = ""; // Initialize the confirmation message
+$confirmationMessage = ""; 
 
 try {
-    // Create a new PDO connection
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
-    // Set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Query to fetch user data by username
     $query = "SELECT * FROM signup WHERE username = :username and user_role = 'Buyer' ";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(":username", $_SESSION["username"]);
@@ -30,23 +26,18 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-// Close the database connection
 $conn = null;
 
-// Handle the POST request for profile update
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
-    // Retrieve the posted data
     $fname = $_POST["fname"];
     $lname = $_POST["lname"];
     $email = $_POST["email"];
     $username = $_SESSION["username"];
 
     try {
-        // Create a new PDO connection for updating the profile
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
+=        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Update the user's profile data in the database
         $updateQuery = "UPDATE signup SET fname = :fname, lname = :lname, email = :email WHERE username = :username";
         $updateStmt = $conn->prepare($updateQuery);
         $updateStmt->bindParam(":fname", $fname);
@@ -55,13 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
         $updateStmt->bindParam(":username", $username);
         $updateStmt->execute();
 
-        // Set the confirmation message
         $confirmationMessage = "Profile updated successfully";
     } catch (PDOException $e) {
-        // Handle database error
         $confirmationMessage = "Error updating profile: " . $e->getMessage();
     } finally {
-        // Close the database connection
         $conn = null;
     }
 }
@@ -74,9 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buyer Profile</title>
     <style>
-        /* Add CSS for background image and centering */
-        body {
-            background-image: url('body3.jpg'); /* Replace with your image path */
+=        body {
+            background-image: url('body3.jpg'); 
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -93,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
 
         .header-title {
             text-align: center;
-            flex-grow: 1; /* Allows the title to take up available space */
+            flex-grow: 1; 
         }
 
         .logout-button {
@@ -102,10 +89,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
             border: none;
             padding: 10px 20px;
             cursor: pointer;
-            margin-right: 20px; /* Move the Logout button to the right */
+            margin-right: 20px; 
         }
 
-        /* Updated color to white and text color to black */
+
         .edit-button {
             background-color: white;
             color: black;
@@ -157,14 +144,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
             color: black;
             font-weight: bold;
             margin-top: 10px;
-            display: <?php echo $confirmationMessage ? 'block' : 'none'; ?>; /* Show the confirmation message when it's not empty */
+            display: <?php echo $confirmationMessage ? 'block' : 'none'; ?>; 
         }
     </style>
 </head>
 <body>
     <header>
         <h1 class="header-title"><br>Buyer Profile</h1>
-        <form method="post" action="realEstateLogin.php"> <!-- Updated action attribute -->
+        <form method="post" action="realEstateLogin.php"> 
             <button type="submit" name="logout" class="logout-button">Logout</button>
         </form>
     </header>
@@ -191,7 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_SESSION["username"])) {
             </tr>
         </table>
         <button onclick="showEditForm()" class="edit-button">Edit Profile</button>
-        <!-- Updated code for the edit form -->
         <form id="edit-form" style="display: none;" method="post">
             <label for="fname">First Name:</label>
             <input type="text" id="fname" name="fname" value="<?php echo $user['fname']; ?>"><br>

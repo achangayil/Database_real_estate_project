@@ -4,7 +4,7 @@
     <title>Company Name - Home</title>
     <link rel="stylesheet" type="text/css" href="style_original.css">
     <style>
-        /* Style for the navigation line */
+      
         .navigation {
             background-color: #333;
             color: #fff;
@@ -27,7 +27,7 @@
             color: #fff;
         }
 
-        /* Style for the link box */
+        
         .link-box {
             text-align: center;
             padding: 20px;
@@ -36,21 +36,20 @@
         .link-box a {
             text-decoration: none;
             background-color: #333;
-            color: #000; /* Black text color */
-            font-weight: bold; /* Bold text */
-            padding: 10px 30px; /* Slightly longer box while keeping width the same */
+            color: #000; 
+            font-weight: bold; 
+            padding: 10px 30px; 
             border-radius: 5px;
-            display: inline-block; /* Makes the box size adjust to its content */
+            display: inline-block; 
         }
 
-        /* Style for the footer */
+       
         footer {
             background-color: #333;
             color: #fff;
             text-align: center;
             padding: 10px 0;
         }
-        
     </style>
 </head>
 <body>
@@ -58,19 +57,18 @@
         <h1>Skyline Haven</h1>
         <p>Find Your Ideal Skyline Haven Right Now!</p>
     </header>
-    <!-- Navigation line -->
+   
     <div class="navigation">
         <ul>
-			<li><a href="realestate_search_page.php">Search Page (Non-member)</a></li>
+            <li><a href="search">Search Page(Non-member)</a></li>
             <li><a href="realEstateLogin.php">Login</a></li>
             <li><a href="signup.php">Create an Account</a></li>
-            <li><a href="admin_login.php">Admin Login</a></li>
-            <li><a href="Terms_of_Service.html">Terms of Service</a></li>
-            <li><a href="FAQ_Page.html">FAQ</a></li>
+            <li><a href="adminlogin.html">Admin Login</a></li>
+            <li><a href="termsOfService.php">Terms of Service</a></li>
+            <li><a href="faq.php">FAQ</a></li>
         </ul>
     </div>
-
-    <!-- Rest of your content -->
+   
     <div class="content-wrapper">
         <section>
             <h2>About Us</h2>
@@ -96,18 +94,16 @@
             <p>Our customer acquisition and retention strategies include customized solutions, gratifying feedback from clients, a lucrative referral program, helpful free resources, competitive pricing, and proactive community involvement. Come together with us on our success journey now!</p>
         </section>
     </div>
-    <!-- Footer -->
+  
     <footer>
         &copy; 2023 Skyline Haven
     </footer>
 
     <script>
-        // Wait for the page to load before running the script
         document.addEventListener('DOMContentLoaded', function () {
             // Find the header element
             var headerElement = document.querySelector('header');
 
-            // Add a class to the header element to trigger the animation
             headerElement.classList.add('slide-in');
         });
     </script>

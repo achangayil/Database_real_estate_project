@@ -5,7 +5,6 @@ if (!isset($_SESSION["username"])) {
     exit;
 }
 
-// Database configuration
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -14,7 +13,6 @@ $dbname = "test";
 $error = "";
 
 try {
-    // Create a new PDO connection
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
     // Set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -29,7 +27,6 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-// Close the database connection
 $conn = null;
 ?>
 
@@ -40,9 +37,8 @@ $conn = null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buyer Dashboard</title>
     <style>
-        /* Add CSS for background image and centering */
         body {
-            background-image: url('body3.jpg'); /* Replace with your image path */
+            background-image: url('body3.jpg'); 
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -59,7 +55,7 @@ $conn = null;
 
         .header-title {
             text-align: center;
-            flex-grow: 1; /* Allows the title to take up available space */
+            flex-grow: 1; 
         }
 
         .logout-button {
@@ -68,7 +64,7 @@ $conn = null;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
-            margin-right: 20px; /* Move the Logout button to the right */
+            margin-right: 20px; 
         }
 
         .button-row {
@@ -124,19 +120,27 @@ $conn = null;
         <h2>My Saved Properties</h2>
         <table class="property-info-table">
             <tr>
+                <th>Address</th>
                 <th>Street Name</th>
-                <th>City</th>
                 <th>Zip Code</th>
                 <th>School Rating</th>
                 <th>Property Price</th>
+                <th>Area</th>
+                <th>Environmental Sustainability Rating</th>
+                <th>Energy Efficiency Rating</th>
+
             </tr>
             <?php foreach ($properties as $property) { ?>
                 <tr>
+                    <td><?php echo $property['Address']; ?></td>
                     <td><?php echo $property['street_name']; ?></td>
-                    <td><?php echo $property['City']; ?></td>
                     <td><?php echo $property['zip_code']; ?></td>
                     <td><?php echo $property['school_rating']; ?></td>
                     <td><?php echo $property['property_price']; ?></td>
+                     <td><?php echo $property['Area']; ?></td>
+                    <td><?php echo $property['environmental_rating']; ?></td>
+                    <td><?php echo $property['energy_efficiency_rating']; ?></td>
+
                 </tr>
             <?php } ?>
         </table>

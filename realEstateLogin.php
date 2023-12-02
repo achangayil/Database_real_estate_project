@@ -1,67 +1,43 @@
 <?php
 session_start();
 
-
-// Database configuration
 $servername = "localhost";
 $db_username = "root";
-$db_password = "root";
-$dbname = "gsu_real_estate";
+$db_password = "";
+$dbname = "test";
 
-// Error message
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $user_role = $_POST["user_role"]; // Added user role selection
-    
-    //change the form action based on this.
-    //$formAction = "gsu_real_estate_search.php";
-    //if ($user_role === "Seller") {
-    //    $formAction = "sellerdashboard.php";
-    //}
-
+    $user_role = $_POST["user_role"]; 
     try {
-        // Create a new PDO connection
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
-        // Set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Query to fetch user data by username and user role
-        $query1 = "SELECT * FROM signup WHERE username = :username AND userrole = :user_role";
-        
-        $result1 = $conn->query($query1);
-        while($row = $result->fetch_assoc()) {
-            $usernamedb = $row["username"];
-            $pwddb = $row["pwd"];
-            $userrole = $row["userrole"];
-            $_SESSION['loggedin'] = true;
-            $_SESSION['usernamedb'] = $usernamedb;
-            echo $_SESSION['emailid'];
-            echo $_SESSION['loggedin'];
-        }
-        if ($result1->num_rows > 0) {
-            if ($row["username"] && $row["pwd"] && $row["userrole"] ) {
-                // Redirect to the appropriate dashboard based on the user role
-                if ($user_role === "Buyer") {                   
-                    header("Location: gsu_real_estate_search.php");                   
-                } elseif ($user_role === "Seller") {
-                    header("Location: sellerdashboard.php");
-                }
-            }else {
-                $error = "Invalid username, password, or user role. Please try again.";
-            }
-            
-        } else {
-            $error = "No result sent from database. Invalid username, password, or user role. Please try again.";
-        }
+        $query = "SELECT * FROM signup WHERE username = :username AND user_role = :user_role";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(":username", $username);
+        $stmt->bindParam(":user_role", $user_role);
+        $stmt->execute();
+        $user = $stmt->fetch();
 
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION["username"] = $username;
+            if ($user_role === "Buyer") {
+                header("Location: buyerdashboard.php");
+            } elseif ($user_role === "Seller") {
+                header("Location: sellerdashboard.php");
+            }
+            exit;
+        } else {
+            $error = "Invalid username, password, or user role. Please try again.";
+        }
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
 
-    // Close the database connection
     $conn = null;
 }
 ?>
@@ -74,7 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Login</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Add custom CSS styles for the back-to-home box */
         .back-to-home {
             margin-top: 20px;
             text-align: center;
@@ -100,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h1>Login</h1>
     </header>
     <section class="content-wrapper">
-        <form method="post" action="gsu_real_estate_search.php">
+        <form method="post" action="">
             <table class="login-table">
                 <tr>
                     <td>User Role:</td>
@@ -126,7 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
     </section>
     
-    <!-- Add the "Back to Home" link under the login table -->
     <div class="back-to-home">
         <a href="index.html">Back to Home</a>
     </div>

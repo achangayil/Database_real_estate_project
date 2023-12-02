@@ -8,25 +8,21 @@ if (!isset($_SESSION["username"])) {
 // Database configuration
 $servername = "localhost";
 $db_username = "root";
-$db_password = "root";
-$dbname = "gsu_real_estate";
+$db_password = "";
+$dbname = "test";
 
 $error = "";
 
 try {
-    // Create a new PDO connection
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
-    // Set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Query to fetch user data by username
     $query = "SELECT * FROM signup WHERE username = :username";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(":username", $_SESSION["username"]);
     $stmt->execute();
     $user = $stmt->fetch();
 
-    // Query to fetch properties for the seller
     $propertiesQuery = "SELECT * FROM properties WHERE user = :username";
     $propertiesStmt = $conn->prepare($propertiesQuery);
     $propertiesStmt->bindParam(":username", $_SESSION["username"]);
@@ -36,7 +32,6 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-// Close the database connection
 $conn = null;
 ?>
 
@@ -47,9 +42,8 @@ $conn = null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard</title>
     <style>
-        /* Add CSS for background image and centering */
         body {
-            background-image: url('body3.jpg'); /* Replace with your image path */
+            background-image: url('body3.jpg'); 
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -66,7 +60,7 @@ $conn = null;
 
         .header-title {
             text-align: center;
-            flex-grow: 1; /* Allows the title to take up available space */
+            flex-grow: 1; 
         }
 
         .logout-button {
@@ -75,7 +69,7 @@ $conn = null;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
-            margin-right: 20px; /* Move the Logout button to the right */
+            margin-right: 20px; 
         }
         .button-row {
             background-color: #333;
@@ -119,7 +113,7 @@ $conn = null;
     <header>
        
         <h1 class="header-title"><br>Seller Dashboard</h1>
-        <form method="post" action="realEstateLogin.php"> <!-- Updated action attribute -->
+        <form method="post" action="realEstateLogin.php"> 
             <button type="submit" name="logout" class="logout-button">Logout</button>
         </form>
     </header>
@@ -128,28 +122,28 @@ $conn = null;
         <a href="sellerprofile.php">My Profile</a>
     </div>
     <section class="content-wrapper">
-        <h2>My Property Listings</h2> <!-- Added title here -->
+        <h2>My Property Listings</h2> 
         <table class="property-table">
             <tr>
-                <th>Property ID</th>
-                <th>Seller ID</th>
+               
+                <th>Address</th>
                 <th>Street Name</th>
-                <th>City</th>
                 <th>Zip Code</th>
                 <th>School Rating</th>
                 <th>Property Price</th>
-                <th>Environmental Rating</th>
+                <th>Area</th>
+                <th>Environmental Sustainability Rating</th>
                 <th>Energy Efficiency Rating</th>
+                
             </tr>
             <?php foreach ($properties as $property) { ?>
                 <tr>
-                    <td><?php echo $property['property_id']; ?></td>
-                    <td><?php echo $property['seller_id']; ?></td>
+                    <td><?php echo $property['Address']; ?></td>
                     <td><?php echo $property['street_name']; ?></td>
-                    <td><?php echo $property['city']; ?></td>
                     <td><?php echo $property['zip_code']; ?></td>
                     <td><?php echo $property['school_rating']; ?></td>
                     <td><?php echo $property['property_price']; ?></td>
+                     <td><?php echo $property['Area']; ?></td>
                     <td><?php echo $property['environmental_rating']; ?></td>
                     <td><?php echo $property['energy_efficiency_rating']; ?></td>
                 </tr>

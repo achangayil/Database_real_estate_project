@@ -1,80 +1,55 @@
 <?php
 
-//session_start();
-
-// Database configuration
 $servername = "localhost";
 $db_username = "root";
-$pwddb = "root";
-$dbname = "gsu_real_estate";
+$db_password = "";
+$dbname = "test";
 
-// Error messages
 $errors = [];
 
-// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Get the form data
-    //$first_name = $_POST["fname"];
-    $name = $_POST["name"];
+    $first_name = $_POST["fname"];
+    $last_name = $_POST["lname"];
     $email = $_POST["email"];
     $username = $_POST["username"];
-    $pwd = $_POST["pwd"];
+    $password = $_POST["password"];
     $user_role = $_POST["user_role"];
-    #echo "name  ","$name"."<BR>";
-    #echo "email  ","$email"."<BR>";
-    #echo "username  ","$username"."<BR>";
-    #echo "pwd  ","$pwd"."<BR>";
-    #echo "user_role  ","$user_role"."<BR>";
 
-    // Validate the form fields (make them mandatory)
-    if (empty($name) || empty($email) || empty($username) || empty($pwd) || empty($user_role) ) {
+    if (empty($first_name) || empty($last_name) || empty($email) || empty($username) || empty($password) || empty($user_role)) {
         $errors[] = "All fields are mandatory.";
     }
 
-    // If there are no errors, proceed with database insertion
     if (empty($errors)) {
         try {
-            // Create connection
-            $conn = new mysqli($servername, $db_username, $pwddb, $dbname);
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            } else{
-                //echo("----connection success----<BR>");
-            }
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Check if the user already exists in the database
-            $query1 = "SELECT * FROM signup WHERE username = '$username' ";
-            //echo("----query1---<BR>". $query1);
-            
-            $result1 = $conn->query($query1);          
-            if ($result1->num_rows > 0) {            
+            $query = "SELECT * FROM signup WHERE username = :username";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+            $user = $stmt->fetch();
+
+            if ($user) {
                 $errors[] = "Username already exists. Please choose a different one.";
             } else {
-                //echo("----are you here----<BR>");
-                // Insert the new user into the database
-                //$query = "INSERT INTO signup (name, email, username, pwd, userrole) VALUES (:name, :email, :username, :pwd, :user_role)";
-                $query2 = "INSERT INTO signup (name, email, username, pwd, userrole) VALUES ('$name', '$email', '$username', '$pwd', '$user_role')";
-                
-                //echo "insert query------   ","$query"."<BR>";  
-                $result2 = $conn->query($query2); 
-                if ($result2) {
-                    echo "Insert query successful!";
-                    
-                    // Registration successful, redirect to the login page
-                    header("Location: realEstateLogin.php");
-                    exit; // Make sure to exit after redirection
-                } else {
-                    echo "Insert query failed.";
-                }
+                $query = "INSERT INTO signup (fname, lname, email, username, password, user_role) VALUES (:fname, :lname, :email, :username, :password, :user_role)";
+                $stmt = $conn->prepare($query);
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $stmt->bindParam(":fname", $first_name);
+                $stmt->bindParam(":lname", $last_name);
+                $stmt->bindParam(":email", $email);
+                $stmt->bindParam(":username", $username);
+                $stmt->bindParam(":password", $hashed_password);
+                $stmt->bindParam(":user_role", $user_role); 
+                $stmt->execute();
 
-                
-            }
+                header("Location: realEstateLogin.php");
+                exit; 
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
 
-        // Close the database connection
         $conn = null;
     }
 }
@@ -85,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <title>Signup Page</title>
     <style>
-        /* Add CSS to style the signup box */
         body {
             display: flex;
             justify-content: center;
@@ -110,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         .signup-box label,
         .signup-box input[type="text"],
         .signup-box input[type="email"],
-        .signup-box input[type="pwd"],
+        .signup-box input[type="password"],
         .signup-box select,
         .signup-box input[type="submit"] {
             display: block;
@@ -134,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: red;
         }
 
-        /* Add CSS for success message */
+      
         .success-message {
             text-align: center;
             background-color: #4CAF50;
@@ -143,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             margin-bottom: 10px;
         }
 
-         /* CSS for the link to index.html */
+   
         .bottom-center {
             text-align: center;
             position: fixed;
@@ -160,22 +134,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="signup-box">
         <h1>Signup</h1>
         <?php
-        // Display any errors encountered during form submission
         if (!empty($errors)) {
             foreach ($errors as $error) {
                 echo "<p class='error-message'>$error</p>";
             }
         } elseif (isset($registration_successful)) {
-            // Display success message after successful registration
             echo "<div class='success-message'>Registration successful!</div>";
 
-            // Add a link to go back to the main page (index.html)
             echo "<p><a href='realEstateLogin.php'>Go to Login Page</a></p>";
         }
         ?>
         <form method="post" action="">
-            <label for="name">Name:</label>
-            <input type="text" name="name" id="name" required>
+            <label for="first_name">First Name:</label>
+            <input type="text" name="fname" id="first_name" required>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="lname" id="last_name" required>
 
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
@@ -183,8 +157,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <label for="username">Username:</label>
             <input type="text" name="username" id="username" required>
 
-            <label for="pwd">Password:</label>
-            <input type="text" name="pwd" id="pwd" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
 
             <label for="user_role">User Role:</label>
             <select name="user_role" id="user_role" required>
